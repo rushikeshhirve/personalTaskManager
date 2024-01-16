@@ -1,10 +1,10 @@
-import express from "express";
-import bodyParser from "body-parser";
-import pg from "pg";
-import bcrypt from "bcrypt";
-import {dirname} from "path"
-import {fileURLToPath} from "url"
-import dotenv from 'dotenv';
+const express = require("express");
+const bodyParser = require("body-parser");
+const pg = require("pg");
+const bcrypt = require("bcrypt");
+const path = require("path");
+const { dirname, fileURLToPath } = require("url");
+const dotenv = require('dotenv');
 
 dotenv.config();
 

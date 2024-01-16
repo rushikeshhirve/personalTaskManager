@@ -25,10 +25,15 @@ app.set('views', __dirname + '/views')
 
 app.use(express.static(__dirname + "/public"));
 
-app.use((req, res, next) => {
-  res.header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-  next();
-});
+// app.use((req, res, next) => {
+//   req.db = db;
+//   next();
+// });
+
+// app.use((req, res, next) => {
+//   res.header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+//   next();
+// });
 
 async function getItems(plan, user_id) {
   let result = await db.query(`SELECT * FROM ${plan} where user_id=${user_id} ORDER BY id`);
@@ -36,11 +41,12 @@ async function getItems(plan, user_id) {
 }
 
 async function addItems(title, currentplan, date) {
-  await db.query(`INSERT INTO ${currentplan} (title, date, user_id) VALUES ($1, $2, $3)`, [title, date, currentUser[0].id], (err) => {
-    if (err) {
-      console.error("Error: " + err.message); 
-    }
-  })
+  try {
+    await db.query(`INSERT INTO ${currentplan} (title, date, user_id) VALUES ($1, $2, $3)`, [title, date, currentUser[0].id]);
+  } catch (err) {
+    console.error("Error: " + err.message);
+    throw err; // Re-throw the error so that the calling function can handle it
+  }
 }
 
 function getdate() {
@@ -133,15 +139,20 @@ app.get("/login/userdashboard", async (req, res) => {
   await res.render("index.ejs", {
     newtitle: "today",
     plan: currentplan,
-    listItems: await getItems(currentplan, currentUser[0].id),
+    listItems: await getItems(currentplan, currentUser && currentUser[0] ? currentUser[0].id : null),
     user: currentUser
   });
 });
 
 app.post("/login/userdashboard/add", async (req, res) => {
   const item = req.body.newtitle;
-  await addItems(item, currentplan, getdate())
-  res.redirect("/login/userdashboard/");
+  try {
+    await addItems(item, currentplan, getdate());
+    res.redirect("/login/userdashboard/");
+  } catch (err) {
+    // Handle the error, e.g., render an error page
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/login/userdashboard/edit", async (req, res) => {
@@ -177,13 +188,22 @@ app.get("/login/userdashboard/plan",async (req, res) => {
 
 app.post("/login/userdashboard/delete", async (req, res) => {
   let { deleteItemId } = req.body;
-  await db.query(`DELETE FROM ${currentplan} WHERE id=$1`, [deleteItemId], (err) => {
-    if (err) console.log(err.message)
-  });
-  res.redirect("/login/userdashboard/");
+  try {
+    await db.query(`DELETE FROM ${currentplan} WHERE id=$1`, [deleteItemId]);
+    res.redirect("/login/userdashboard/");
+  } catch (err) {
+    // Handle the error, e.g., render an error page
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}...`)
 })
+
+// process.on('SIGINT', () => {
+//   db.$pool.end();
+//   console.log('Database pool closed.');
+//   process.exit(0);
+// });

@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.set('views', __dirname + '/views')
 
-app.use(express.static("public"))
+app.use(express.static(__dirname + "/public"));
 
 app.use((req, res, next) => {
   res.header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');

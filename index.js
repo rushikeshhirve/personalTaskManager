@@ -4,7 +4,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import {dirname} from "path"
 import {fileURLToPath} from "url"
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 dotenv.config();
 

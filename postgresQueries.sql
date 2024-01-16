@@ -19,7 +19,7 @@ CREATE TABLE month (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR(100) NOT NULL,
   	state INTEGER DEFAULT 1,
-  	date VARCHAR(22)
+  	date VARCHAR(22),
 	user_id INTEGER REFERENCES users(id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE year (
 	id SERIAL PRIMARY KEY,
 	title VARCHAR(100) NOT NULL,
  	state INTEGER DEFAULT 1,
-  	date VARCHAR(22)
+  	date VARCHAR(22),
 	user_id INTEGER REFERENCES users(id)
 );
 
@@ -35,4 +35,5 @@ CREATE TABLE year (
 DROP TABLE week;
 DROP TABLE month;
 DROP TABLE year;
+DROP TABLE users;
 --------------------------------

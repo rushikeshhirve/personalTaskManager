@@ -2,13 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const pg = require("pg");
 const bcrypt = require("bcrypt");
-const path = require("path");
-const { dirname, fileURLToPath } = require("url");
+// const path = require("path");
+// const { dirname, fileURLToPath } = require("url");
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+// const __dirname = dirname(fileURLToPath(import.meta.url))
+
+
 const app = express();
 const port = 3000;
 const saltRounds = 10;
@@ -24,7 +26,7 @@ let currentplan = "week";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
-// app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/views')
 
 app.use(express.static("public"))
 

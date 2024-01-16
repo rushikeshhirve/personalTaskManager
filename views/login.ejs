@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+    <div class="">
+        <%- include('partials/left') %>
+
+            <div class="bottom-container">
+                <h4>Login for a personalized task management journey.</h4>
+
+                <ul>
+                    <% if(locals.msg) { %>
+                        <li>
+                            <%= msg %>
+                        </li>
+                        <% } %>
+                </ul>
+
+                <div class="square">
+                    
+                    <form action="/login/userdashboard" method="POST">
+                        <div>
+                            <input type="email" id="email" name="email" class="in m-2" placeholder="Email" required />
+                        </div>
+                        <div>
+                            <input type="password" id="password" name="password" class="in m-2" placeholder="Password" required />
+                        </div>
+                        <div>
+                            <input type="submit" value="Login" class="btn btn-outline-dark button-89 m-2"/>
+                        </div>
+                
+                        <a href="/register" class="m-2">New User? Register Now</a>
+                    </form>
+
+                </div>
+            </div>
+
+    </div>
+
+<%- include('partials/footer') %>

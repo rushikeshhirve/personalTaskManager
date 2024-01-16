@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <link rel="stylesheet" href="/styles/dash.css" type="text/css">
+</head>
+<body>
+<main>
+      <div class="box" id="heading">
+        <form class="tab-view tab-view-height-auto" action="/login/userdashboard/plan">
+          <button class="plan-type" type="submit" name="plan" value=1>Weekly Plan</button>
+          <button class="plan-type" type="submit" name="plan" value=2>Monthly Plan</button>
+          <button class="plan-type" type="submit" name="plan" value=3>Yearly Plan</button>
+        </form>
+        <a href="/logout">Logout</a>
+      </div>
+
+      <p id="plan-name">
+        <b><i>
+            <%= user[0].name %>'s <%= plan %>ly plan
+          </i></b>
+      </p>
+
+      <div class="box">
+        <% for(let item of listItems){%>
+
+          <div class="item">
+            <form action="/login/userdashboard/delete" method="post">
+              <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
+            </form>
+
+            <p id="title<%=item.id%>">
+              <%= item.title %>
+            </p>
+
+            <form class="edit" action="/login/userdashboard/edit" method="post">
+              <input type="hidden" name="updatedItemId" value="<%= item.id %>">
+
+              <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
+                autocomplete="off" autofocus="true" hidden="true" />
+
+              <select name="updatedState" id="state<%=item.id%>" class="updatedState" hidden>
+                <option value="1" <% if (item.state==1) { %> selected <% } %>>To do</option>
+                <option value="2" <% if (item.state==2) { %> selected <% } %>>In Progress</option>
+                <option value="3" <% if (item.state==3) { %> selected <% } %>>completed</option>
+              </select>
+
+              <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
+                  src="/assets/icons/check-solid.svg" alt="tick image">
+              </button>
+            </form>
+
+            <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
+                src="/assets/icons/pencil-solid.svg" alt="pencil image">
+            </button>
+
+            <div id="timebox" class="timebox ">
+              <div>
+                <% if (item.state==1) { %> To do <% } %>
+                    <% if (item.state==2) { %> In Progress <% } %>
+                        <% if (item.state==3) { %> completed <% } %>
+              </div>
+              <div>
+                [<%= item.date %>]
+              </div>
+
+            </div>
+          </div>
+          <% } %>
+
+            <form class="item" action="/login/userdashboard/add" method="post">
+              <input type="text" name="newtitle" placeholder="New Item(Limit is 100 characters)" autocomplete="off"
+                autofocus="true" />
+              <button class="add" type="submit" name="title" value=<%=newtitle %> >+</button>
+            </form>
+      </div>
+
+      <script>
+        function handler(id, state) {
+          document.getElementById("title" + id).setAttribute("hidden", true)
+          document.getElementById("edit" + id).setAttribute("hidden", true)
+          document.getElementById("done" + id).removeAttribute("hidden")
+          document.getElementById("input" + id).removeAttribute("hidden")
+          document.getElementById("state" + id).removeAttribute("hidden")
+        }
+      </script>
+</main>
+<footer>Made with interest and love❤️
+</footer>
+</body>
+</html>

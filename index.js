@@ -140,7 +140,7 @@ app.get("/login/userdashboard", async (req, res) => {
     newtitle: "today",
     plan: currentplan,
     listItems: await getItems(currentplan, currentUser && currentUser[0] ? currentUser[0].id : null),
-    user: currentUser
+    user: await currentUser
   });
 });
 

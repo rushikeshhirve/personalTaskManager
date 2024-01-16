@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const pg = require("pg");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs")
 // const path = require("path");
 // const { dirname, fileURLToPath } = require("url");
 const dotenv = require('dotenv');

@@ -2,14 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const pg = require("pg");
 const bcrypt = require("bcryptjs")
-// const path = require("path");
-// const { dirname, fileURLToPath } = require("url");
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-// const __dirname = dirname(fileURLToPath(import.meta.url))
-
 
 const app = express();
 const port = 3000;
@@ -135,7 +130,7 @@ app.post("/login/userdashboard", async (req, res) => {
 
 // ---------------------------------------
 app.get("/login/userdashboard", async (req, res) => {
-  res.render("index.ejs", {
+  await res.render("index.ejs", {
     newtitle: "today",
     plan: currentplan,
     listItems: await getItems(currentplan, currentUser[0].id),

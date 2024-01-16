@@ -4,19 +4,19 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import {dirname} from "path"
 import {fileURLToPath} from "url"
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-const db = new pg.Client({
-  user: "postgres", 
-  host: "localhost",
-  database: "webproject",
-  password: "123456",
-  port: 5432,
-});
+const { Pool } = pg;
+const db = new Pool({
+  connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+})
 db.connect();
 
 let currentUser;

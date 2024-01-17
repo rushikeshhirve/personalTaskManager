@@ -17,6 +17,15 @@
 
 4. Run the application with `npm start`. Visit http://localhost:3000 in your browser.
 
+## Technologies Used
+
+- **Express:** A web application framework for Node.js that simplifies the process of building robust web applications.
+- **body-parser:** Middleware for handling HTTP POST requests, making it easier to extract data from the request body.
+- **pg (PostgreSQL):** A PostgreSQL client for Node.js that enables interaction with PostgreSQL databases.
+- **bcryptjs:** A library for hashing passwords, adding an extra layer of security by converting passwords into irreversible hash values.
+
+
+
 ## Usage
 
 - Organize tasks by week, month, and year.
@@ -27,12 +36,9 @@
 
 - **User Authentication:**
   - Register and securely log in with hashed passwords.
-  
 - **Task Organization:**
   - Categorize tasks weekly, monthly, or yearly.
-  
 - **Task Management:**
   - Create, edit, and delete tasks.
-  
 - **Task Status Tracking:**
   - Set task status to "To Do," "In Progress," or "Completed."

@@ -3,13 +3,13 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 90vh;
-  background-color: #f8f9fa; /* Set your desired background color */
+  background-color: #f8f9fa; 
 }
 
 .top-container {
   text-align: center;
   padding: 40px;
-  background-color: #ffffff; /* Set your desired background color */
+  background-color: #ffffff; 
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 700px;

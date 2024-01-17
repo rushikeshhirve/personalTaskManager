@@ -7,13 +7,16 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const saltRounds = 10;
 
-const { Pool } = pg;
-const db = new Pool({
-  connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-})
+const db = new pg.Client({
+  user: process.env.DB_USER, 
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
 db.connect();
 
 let currentUser;
@@ -22,18 +25,7 @@ let currentplan = "week";
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.set('views', __dirname + '/views')
-
 app.use(express.static(__dirname + "/public"));
-
-// app.use((req, res, next) => {
-//   req.db = db;
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   res.header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-//   next();
-// });
 
 async function getItems(plan, user_id) {
   let result = await db.query(`SELECT * FROM ${plan} where user_id=${user_id} ORDER BY id`);
@@ -45,7 +37,7 @@ async function addItems(title, currentplan, date) {
     await db.query(`INSERT INTO ${currentplan} (title, date, user_id) VALUES ($1, $2, $3)`, [title, date, currentUser[0].id]);
   } catch (err) {
     console.error("Error: " + err.message);
-    throw err; // Re-throw the error so that the calling function can handle it
+    throw err;
   }
 }
 
@@ -72,7 +64,7 @@ app.get("/register", (req, res) => {
 })
 
 app.get("/logout", (req, res) => {
-  res.render("login", {msg: "You have log out seccessfully"});
+  res.render("login", {msg: "You have log out successfully"});
 });
 
 app.post("/register", async (req, res) => {
@@ -128,7 +120,7 @@ app.post("/login/userdashboard", async (req, res) => {
       });
     } else {
       // No user
-      res.render("login", { msg: "No user with this username. Kindly register" });
+      res.render("login", { msg: "No user with this username. Kindly register." });
     }
   }
   );
@@ -139,8 +131,8 @@ app.get("/login/userdashboard", async (req, res) => {
   await res.render("index.ejs", {
     newtitle: "today",
     plan: currentplan,
-    listItems: await getItems(currentplan, currentUser && currentUser[0] ? currentUser[0].id : null),
-    user: await currentUser
+    listItems: await getItems(currentplan, currentUser[0].id),
+    user: currentUser
   });
 });
 
@@ -150,7 +142,6 @@ app.post("/login/userdashboard/add", async (req, res) => {
     await addItems(item, currentplan, getdate());
     res.redirect("/login/userdashboard/");
   } catch (err) {
-    // Handle the error, e.g., render an error page
     res.status(500).send("Internal Server Error");
   }
 });
@@ -192,7 +183,6 @@ app.post("/login/userdashboard/delete", async (req, res) => {
     await db.query(`DELETE FROM ${currentplan} WHERE id=$1`, [deleteItemId]);
     res.redirect("/login/userdashboard/");
   } catch (err) {
-    // Handle the error, e.g., render an error page
     res.status(500).send("Internal Server Error");
   }
 });
@@ -201,9 +191,3 @@ app.post("/login/userdashboard/delete", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on ${port}...`)
 })
-
-// process.on('SIGINT', () => {
-//   db.$pool.end();
-//   console.log('Database pool closed.');
-//   process.exit(0);
-// });
